@@ -56,7 +56,8 @@ python -m pip install pyserial==3.5 esptool==4.8.1
 From this directory, build the image (this will take some time):
 
 ```sh
-docker build -t env-zephyr-espressif -f Dockerfile.espressif .
+docker build -t env-zephyr-espressif -f Dockerfile.espressif . # Espressif
+docker build -t env-zephyr-st -f Dockerfile.st . # ST
 ```
 
 > **NOTE**: If you see an `Unsupported architecture` error, you may need to set the CPU architecture manually. Add `--build-arg TARGETARCH=amd64` (or `arm64`, depending on your CPU) to your `docker build` command.
@@ -65,16 +66,9 @@ You can ignore the warning about setting the password as an `ARG` in the Dockerf
 
 Run the image in *VS Code Server* mode. Note that it mounts the local *workspace/* directory into the container! We also expose ports 3333 (OpenOCD), 2222 (mapped from 22 within the container for SSH), and 8800 (*code-server*).
 
-Linux/macOS:
-
 ```sh
-docker run --rm -it -p 3333:3333 -p 2222:22 -p 8800:8800 -v "$(pwd)"/workspace:/workspace -w /workspace env-zephyr-espressif
-```
-
-Windows (PowerShell):
-
-```bat
-docker run --rm -it -p 3333:3333 -p 2222:22 -p 8800:8800 -v "${PWD}\workspace:/workspace" -w /workspace env-zephyr-espressif
+docker run --rm -it -p 3333:3333 -p 2222:22 -p 8800:8800 -v "${PWD}/workspace:/workspace" -w /workspace env-zephyr-espressif # Espressif
+docker run --rm -it -p 3333:3333 -p 2222:22 -p 8800:8800 -v "${PWD}/workspace:/workspace" -w /workspace env-zephyr-st # ST
 ```
 
 Alternatively, you can run the image in interactive mode by adding the `--entrypoint /bin/bash` argument. This will allow you to skip running the VS Code server in the background.
@@ -124,9 +118,10 @@ I recommend installing the following VS Code extensions to make working with Zep
 
 Open a terminal in the VS Code client and build the project. Note that I'm using the [ESP32-S3-DevKitC](https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32s3/esp32-s3-devkitc-1/index.html) as my target board. Feel free to change it to one of the [other ESP32 dev boards](https://docs.zephyrproject.org/latest/boards/index.html#vendor=espressif).
 
-```
+```sh
 cd apps/01_demo_blink
-west build -p always -b esp32s3_devkitc/esp32s3/procpu -- -DDTC_OVERLAY_FILE=boards/esp32s3_devkitc.overlay
+west build -p always -b esp32s3_devkitc/esp32s3/procpu -- -DDTC_OVERLAY_FILE=boards/esp32s3_devkitc.overlay # Espressif
+west build -p always -b b_u585i_iot02a -- -DDTC_OVERLAY_FILE=boards/b_u585i_iot02a.overlay # ST
 ```
 
 With some luck, the *blink* sample should build. The binary files will be in *workspace/apps/blink/build/zephyr*, which you can flash using [esptool](https://docs.espressif.com/projects/esptool/en/latest/esp32/).
