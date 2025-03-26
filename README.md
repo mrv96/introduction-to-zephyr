@@ -148,6 +148,22 @@ python -m serial.tools.miniterm "<PORT>" 115200
 
 You should see the LED state printed to the console. Exit with *ctrl+]* (or *cmd+]* for macOS).
 
+#### Flash within the container (tested with STM32 on Linux)
+
+Start the container exposing system devices:
+
+```sh
+docker run --privileged --rm -it -p 3333:3333 -p 2222:22 -p 8800:8800 -v /dev:/dev:ro -v "$(pwd)"/workspace:/workspace -w /workspace env-zephyr-st
+```
+
+After build, run inside the container:
+
+```sh
+west flash
+```
+
+As well, you can now open a serial port within the container using `python -m serial.tools.miniterm` command.
+
 ## Development Environment: Raspberry Pi Pico
 
 > **IMPORTANT!** This is an experimental Docker image for building Zephyr applications for the Raspberry Pi RP2x line of processors (e.g. RP2040). I cannot promise all demo applications from the course will work.
