@@ -16,6 +16,11 @@ ARG VS_CODE_EXT_NRF_DEVICETREE_VERSION=2024.9.26
 ARG TOOLCHAIN_LIST="-t arm-zephyr-eabi"
 ARG WGET_ARGS="-q --show-progress --progress=bar:force:noscroll"
 ARG VIRTUAL_ENV=/opt/venv
+ARG STM32CUBEIDE_IMAGE_VERSION=15.0
+
+#-------------------------------------------------------------------------------
+# STM32CubeIDE Image
+FROM xanderhendriks/stm32cubeide:${STM32CUBEIDE_IMAGE_VERSION}
 
 #-------------------------------------------------------------------------------
 # Base Image and Dependencies
@@ -75,7 +80,8 @@ RUN apt-get -y update && \
         vim \
         nano \
         mc \
-        openssh-server
+        openssh-server \
+        libusb-1.0-0
 
 # Set root password
 RUN echo "root:${PASSWORD}" | chpasswd
@@ -161,6 +167,15 @@ RUN cd /opt/toolchains/zephyr-sdk-${ZEPHYR_SDK_VERSION} && \
 
 # Install software requirements
 RUN python3 -m pip install cryptography pyasn1 pyyaml cbor>=1.0.0 imgtool>=1.9.0 jinja2 click
+
+#-------------------------------------------------------------------------------
+# STM32 Development Environment
+
+# Install STM32CubeProgrammer
+COPY --from=0 /opt/st/stm32cubeide*/plugins /tmp/st/
+RUN mkdir -p /root/STMicroelectronics/STM32Cube/ && \
+    cp -r "$(find /tmp/st/ -name *Programmer* | xargs dirname)/.." /root/STMicroelectronics/STM32Cube/STM32CubeProgrammer && \
+    rm -rf /tmp/st
 
 #-------------------------------------------------------------------------------
 # VS Code Server
