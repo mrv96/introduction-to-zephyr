@@ -1,0 +1,22 @@
+/ {
+    aliases {
+        my-button = &button_1;
+        my-led = &led_builtin;
+    };
+
+    buttons {
+        compatible = "gpio-keys";
+        debounce-interval-ms = <50>;
+        polling-mode;
+        button_1: user-button {
+            gpios = <&gpioc 13 GPIO_ACTIVE_HIGH>;
+        };
+    };
+
+    leds {
+        compatible = "gpio-leds";
+        led_builtin: d13 {
+            gpios = <&gpioe 13 GPIO_ACTIVE_HIGH>;
+        };
+    };
+};
