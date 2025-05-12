@@ -1,15 +1,25 @@
 / {
     aliases {
-        my-button = &button_1;
-        my-led = &led_builtin;
+        button-red = &button_1;
+        button-green = &button_2;
+        button-blue = &button_builtin;
+        led-red = &led_1;
+        led-green = &led_2;
+        led-blue = &led_builtin;
     };
 
     buttons {
         compatible = "gpio-keys";
         debounce-interval-ms = <50>;
         polling-mode;
-        button_1: user-button {
+        button_builtin: user-button {
             gpios = <&gpioc 13 GPIO_ACTIVE_HIGH>;
+        };
+        button_1: d2 {
+            gpios = <&gpiod 15 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+        };
+        button_2: d3 {
+            gpios = <&gpiob 2 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
         };
     };
 
@@ -17,6 +27,12 @@
         compatible = "gpio-leds";
         led_builtin: d13 {
             gpios = <&gpioe 13 GPIO_ACTIVE_HIGH>;
+        };
+        led_1: d5 {
+            gpios = <&gpioe 0 GPIO_ACTIVE_LOW>;
+        };
+        led_2: d6 {
+            gpios = <&gpiob 6 GPIO_ACTIVE_LOW>;
         };
     };
 };
