@@ -1,0 +1,53 @@
+/ {
+    aliases {
+        my-adc = &adc1;
+        my-adc-channel = &adc1_ch15;
+		pwm-led-red = &pwm_led1;
+		pwm-led-green = &pwm_led2;
+    };
+};
+
+/ {
+	zephyr,user {
+		/* adjust channel number according to pinmux in board.dts */
+		io-channels = <&adc1 15>;
+	};
+};
+
+&adc1 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	adc1_ch15: channel@15 { // A5 -> PB0
+		reg = <15>;
+		zephyr,gain = "ADC_GAIN_1";
+		zephyr,reference = "ADC_REF_INTERNAL";
+        zephyr,vref-mv = <3300>;
+		zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+		zephyr,resolution = <14>;
+	};
+};
+
+&timers16 {
+	status = "okay";
+	st,prescaler = <1000>;
+	pwm16: pwm {
+		status = "okay";
+		pinctrl-0 = <&tim16_ch1_pe0>;
+		pinctrl-names = "default";
+	};
+};
+
+/ {
+	pwmleds {
+		compatible = "pwm-leds";
+		status = "okay";
+
+		pwm_led1: red_pwm_led {
+			pwms = <&pwm16 1 PWM_USEC((1 << 14) - 1) PWM_POLARITY_INVERTED>; // 1 << ADC resolution
+		};
+		pwm_led2: green_pwm_led {
+			pwms = <&pwm4 1 PWM_MSEC(20) PWM_POLARITY_INVERTED>; // milliseconds overrided in software
+		};
+	};
+};
