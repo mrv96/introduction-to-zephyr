@@ -10,6 +10,7 @@
             "request": "launch",
             "type": "cortex-debug",
             "servertype": "openocd",
+            "serverpath": "/opt/toolchains/zephyr-sdk-0.16.8/sysroots/x86_64-pokysdk-linux/usr/bin/openocd",
             "runToEntryPoint": "main",
             "device": "STM32U585AIIxQ",
             "configFiles": [
