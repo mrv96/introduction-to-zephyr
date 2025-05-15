@@ -1,0 +1,18 @@
+description: |
+    STMicroelectronics ILPS28QSW pressure and temperature sensor.
+
+compatible: "st,ilps28qsw"
+
+include: [sensor-device.yaml, i2c-device.yaml]
+
+properties:
+  scale:
+    type: int
+    default: 0
+    description: |
+        Specify the full-scale mode.
+        The default is the power-on reset value.
+
+        - 0 # LPS28DFW_DT_FS_MODE_1_1260
+        - 1 # LPS28DFW_DT_FS_MODE_2_4060
+    enum: [0, 1]

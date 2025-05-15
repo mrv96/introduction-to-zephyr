@@ -1,0 +1,13 @@
+/ {
+    aliases {
+        my-sensor = &sensor_1;
+    };
+};
+
+&i2c1 {
+	sensor_1: ilps28qsw@5c {
+		compatible = "st,ilps28qsw";
+		reg = <0x5c>;
+		scale = <1>;
+	};
+};
