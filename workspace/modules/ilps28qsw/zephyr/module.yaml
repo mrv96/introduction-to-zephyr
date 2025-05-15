@@ -1,0 +1,6 @@
+name: ilps28qsw
+build:
+  cmake: .
+  kconfig: Kconfig
+  settings:
+    dts_root: .
